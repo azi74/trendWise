@@ -1,9 +1,10 @@
-
 import React, { useState } from 'react';
 import { TrendingUp, Calendar, Eye, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ArticleCard from '../components/ArticleCard';
 import SearchBar from '../components/SearchBar';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 // Mock trending articles data
 const trendingArticles = [
@@ -89,30 +90,34 @@ const Trending = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
+      <Navbar />
+      
       {/* Header */}
-      <header className="py-16 px-4 sm:px-6 lg:px-8">
+      <header className="py-8 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex items-center justify-center mb-4">
-            <TrendingUp className="h-12 w-12 text-violet-400 mr-3" />
-            <h1 className="text-4xl md:text-5xl font-bold text-white">
+            <TrendingUp className="h-8 sm:h-12 w-8 sm:w-12 text-violet-400 mr-3" />
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
               Trending Now
             </h1>
           </div>
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-300 mb-8 max-w-2xl mx-auto px-4">
             Stay updated with the hottest topics and breaking news from around the world
           </p>
           
-          <SearchBar onSearch={handleSearch} />
+          <div className="max-w-md mx-auto">
+            <SearchBar onSearch={handleSearch} />
+          </div>
         </div>
       </header>
 
       {/* Trending Articles */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
+      <section className="py-8 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-12">
-            <h2 className="text-3xl font-bold text-white">Hot Topics</h2>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 sm:mb-12 gap-4">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">Hot Topics</h2>
             <div className="flex items-center space-x-4">
-              <span className="text-gray-400">
+              <span className="text-gray-400 text-sm sm:text-base">
                 {filteredArticles.length} trending articles
               </span>
             </div>
@@ -127,7 +132,7 @@ const Trending = () => {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {filteredArticles.map(article => (
                 <ArticleCard key={article.id} article={article} />
               ))}
@@ -135,6 +140,8 @@ const Trending = () => {
           )}
         </div>
       </section>
+      
+      <Footer />
     </div>
   );
 };
