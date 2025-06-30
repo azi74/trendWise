@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom';
 import ArticleCard from '../components/ArticleCard';
 import AuthModal from '../components/AuthModal';
 import SearchBar from '../components/SearchBar';
+import Footer from '../components/Footer';
 
-// Mock data for articles - in real app this would come from API
+// Expanded mock data for articles (9 total)
 const mockArticles = [
   {
     id: 1,
@@ -55,11 +56,72 @@ const mockArticles = [
     readTime: "7 min read",
     views: 1650,
     tags: ["Voice Search", "SEO", "Technology"]
+  },
+  {
+    id: 5,
+    title: "Blockchain Technology Beyond Cryptocurrency",
+    slug: "blockchain-beyond-cryptocurrency",
+    excerpt: "Discover how blockchain is revolutionizing industries beyond finance with real-world applications.",
+    thumbnail: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=400&fit=crop",
+    author: "TrendWise AI",
+    publishedAt: "2024-01-11",
+    readTime: "9 min read",
+    views: 2350,
+    tags: ["Blockchain", "Technology", "Innovation"]
+  },
+  {
+    id: 6,
+    title: "Remote Work Culture: Building Teams That Thrive",
+    slug: "remote-work-culture-building-teams",
+    excerpt: "Essential strategies for creating a productive and engaging remote work environment in 2024.",
+    thumbnail: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&h=400&fit=crop",
+    author: "TrendWise AI",
+    publishedAt: "2024-01-10",
+    readTime: "6 min read",
+    views: 1920,
+    tags: ["Remote Work", "Team Building", "Productivity"]
+  },
+  {
+    id: 7,
+    title: "Sustainable Tech: Green Solutions for Digital World",
+    slug: "sustainable-tech-green-solutions",
+    excerpt: "How technology companies are reducing their carbon footprint and building sustainable digital solutions.",
+    thumbnail: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&h=400&fit=crop",
+    author: "TrendWise AI",
+    publishedAt: "2024-01-09",
+    readTime: "7 min read",
+    views: 1750,
+    tags: ["Sustainability", "Technology", "Environment"]
+  },
+  {
+    id: 8,
+    title: "Cybersecurity Threats and Protection Strategies",
+    slug: "cybersecurity-threats-protection-strategies",
+    excerpt: "Stay ahead of cyber threats with comprehensive security strategies for individuals and businesses.",
+    thumbnail: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=400&fit=crop",
+    author: "TrendWise AI",
+    publishedAt: "2024-01-08",
+    readTime: "8 min read",
+    views: 2890,
+    tags: ["Cybersecurity", "Privacy", "Technology"]
+  },
+  {
+    id: 9,
+    title: "The Metaverse: Virtual Reality's Next Evolution",
+    slug: "metaverse-virtual-reality-evolution",
+    excerpt: "Exploring the potential of virtual worlds and how they're reshaping social interaction and commerce.",
+    thumbnail: "https://images.unsplash.com/photo-1622979135225-d2ba269cf1ac?w=800&h=400&fit=crop",
+    author: "TrendWise AI",
+    publishedAt: "2024-01-07",
+    readTime: "10 min read",
+    views: 3240,
+    tags: ["Metaverse", "VR", "Future Tech"]
   }
 ];
 
 const Index = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredArticles, setFilteredArticles] = useState(mockArticles);
 
@@ -75,6 +137,11 @@ const Index = () => {
       );
       setFilteredArticles(filtered);
     }
+  };
+
+  const handleAuthToggle = () => {
+    setIsLoggedIn(!isLoggedIn);
+    setShowAuthModal(false);
   };
 
   return (
@@ -99,22 +166,26 @@ const Index = () => {
               <Link to="/trending" className="text-gray-300 hover:text-violet-400 transition-colors">
                 Trending
               </Link>
-              <Link to="/categories" className="text-gray-300 hover:text-violet-400 transition-colors">
-                Categories
-              </Link>
-              <Link to="/about" className="text-gray-300 hover:text-violet-400 transition-colors">
-                About
-              </Link>
             </nav>
 
             {/* Auth Button */}
-            <button
-              onClick={() => setShowAuthModal(true)}
-              className="flex items-center space-x-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white px-4 py-2 rounded-xl hover:from-violet-700 hover:to-purple-700 transition-all duration-200"
-            >
-              <User className="h-4 w-4" />
-              <span>Sign In</span>
-            </button>
+            {isLoggedIn ? (
+              <Link
+                to="/profile"
+                className="flex items-center space-x-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white px-4 py-2 rounded-xl hover:from-violet-700 hover:to-purple-700 transition-all duration-200"
+              >
+                <User className="h-4 w-4" />
+                <span>Profile</span>
+              </Link>
+            ) : (
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="flex items-center space-x-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white px-4 py-2 rounded-xl hover:from-violet-700 hover:to-purple-700 transition-all duration-200"
+              >
+                <User className="h-4 w-4" />
+                <span>Sign In</span>
+              </button>
+            )}
           </div>
         </div>
       </header>
@@ -169,9 +240,12 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Footer */}
+      <Footer />
+
       {/* Auth Modal */}
       {showAuthModal && (
-        <AuthModal onClose={() => setShowAuthModal(false)} />
+        <AuthModal onClose={() => setShowAuthModal(false)} onAuthSuccess={handleAuthToggle} />
       )}
     </div>
   );
