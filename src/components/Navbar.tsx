@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { TrendingUp, Menu, X, User } from 'lucide-react';
 import { 
@@ -7,18 +7,45 @@ import {
   SheetContent, 
   SheetTrigger,
   SheetHeader,
-  SheetTitle
+  SheetTitle,
+  SheetClose
 } from './ui/sheet';
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
+  DialogTitle,
+  DialogClose
 } from './ui/dialog';
 import AuthModal from './AuthModal';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const controlNavbar = () => {
+      if (typeof window !== 'undefined') {
+        if (window.scrollY > lastScrollY && window.scrollY > 100) {
+          // Scrolling down & past threshold
+          setIsVisible(false);
+        } else {
+          // Scrolling up
+          setIsVisible(true);
+        }
+        setLastScrollY(window.scrollY);
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', controlNavbar);
+      return () => {
+        window.removeEventListener('scroll', controlNavbar);
+      };
+    }
+  }, [lastScrollY]);
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -55,6 +82,11 @@ const Navbar = () => {
             </button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md bg-gray-900 border-gray-800">
+            <DialogTitle className="sr-only">Authentication</DialogTitle>
+            <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+              <X className="h-4 w-4 text-red-500" />
+              <span className="sr-only">Close</span>
+            </DialogClose>
             <AuthModal />
           </DialogContent>
         </Dialog>
@@ -73,6 +105,10 @@ const Navbar = () => {
         <SheetContent side="bottom" className="bg-gray-900 border-gray-800 rounded-t-2xl">
           <SheetHeader>
             <SheetTitle className="text-white text-center">Welcome to TrendWise</SheetTitle>
+            <SheetClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+              <X className="h-4 w-4 text-red-500" />
+              <span className="sr-only">Close</span>
+            </SheetClose>
           </SheetHeader>
           <div className="mt-4">
             <AuthModal />
@@ -83,7 +119,9 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-black/80 backdrop-blur-sm border-b border-gray-800 sticky top-0 z-50">
+    <nav className={`bg-black/80 backdrop-blur-sm border-b border-gray-800 sticky top-0 z-50 transition-transform duration-300 ${
+      isVisible ? 'translate-y-0' : '-translate-y-full'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -113,6 +151,10 @@ const Navbar = () => {
               <SheetContent side="right" className="w-80 bg-gray-900 border-gray-800">
                 <SheetHeader>
                   <SheetTitle className="text-white text-left">Navigation</SheetTitle>
+                  <SheetClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+                    <X className="h-4 w-4 text-red-500" />
+                    <span className="sr-only">Close</span>
+                  </SheetClose>
                 </SheetHeader>
                 <div className="mt-8">
                   <NavLinks mobile onLinkClick={() => setIsOpen(false)} />
